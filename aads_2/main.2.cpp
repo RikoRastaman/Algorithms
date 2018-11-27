@@ -1,6 +1,9 @@
 #include <iostream>
 #include <vector>
 #include <numeric>
+#include <fstream>
+#include <string>
+#include <Windows.h>
 /*
 8. Выборы старосты в группе студентов из M человек
 организованы по следующим правилам. Задаются целые числа N и
@@ -17,20 +20,20 @@ using namespace std;
 
 int GetStudent(int n, int groupSize)
 {
-    // cout << "Group size in student" << groupSize << endl;
-    if (groupSize > n) ///or -1
+
+    if (groupSize > n)
     {
-        return n; // n-1 or n
+        return n;
     }
     int coef = (groupSize) / n;
-    // cout << "coef=>" << coef << endl;
+
     if (coef >= 1)
     {
-        return n; // or * coef
+        return n;
     }
     else
     {
-        // cout << n % groupSize << "%%" << endl;
+
         if ((n % groupSize) == 0)
         {
             return groupSize;
@@ -42,7 +45,6 @@ int GetStudent(int n, int groupSize)
                 n = n - groupSize;
             }
             return n;
-            // return n - groupSize;
         }
     }
 }
@@ -78,44 +80,69 @@ int main()
     int k = 0;
     int startStudent = 0;
     int temporaryStudent = 0;
-    cout << "Enter M: ";
-    cin >> m;
-    cout << "Enter N: ";
-    cin >> n;
-    cout << "Enter K: ";
-    cin >> k;
+    SetConsoleCP(1251);
+    SetConsoleOutputCP(1251);
+    string str;
+    string inputFile;
+    string outputFile = "output.txt";
+    cout << "Enter input file name: ";
+    cin >> inputFile;
 
-    vector<int> group = vector<int>(m);
-    std::iota(std::begin(group), std::end(group), 1); // Fill with 1, ..., 99.
-
-    for (std::vector<int>::const_iterator i = group.begin(); i != group.end(); ++i)
-        std::cout << *i << ' ';
-
-    startStudent = GetStudent(n, group.size());
-    while (group.size() != 1)
+    ifstream fileForInput(inputFile);
+    ofstream fileForOutput(outputFile);
+    if (!fileForInput.is_open())
     {
-        cout << "[size OF CLASS] : " << group.size() << endl;
-
-        // cout << GetBoss(GetStudent(n, group.size()), k, group.size()) << endl;
-
-        cout << "StartST: " << startStudent << endl;
-        cout << "GetBoss student: " << GetBoss(startStudent, k, group.size()) << endl;
-        temporaryStudent = GetBoss(startStudent, k, group.size());
-
-        group.erase(group.begin() + (GetBoss(startStudent, k, group.size()) - 1));
-
-        startStudent = temporaryStudent + 1;
-
-        if (startStudent > group.size())
-        {
-            startStudent = 1;
-        }
-
-        cout << "CLASS: ";
-        for (std::vector<int>::const_iterator i = group.begin(); i != group.end(); ++i)
-            std::cout << *i << ' ';
-        cout << endl;
+        cout << "File does not opened";
     }
-    std::cout << group[1] << std::endl;
+    else
+    {
+        while (fileForInput >> m >> n >> k)
+        {
+
+            // cout << "Enter M: ";
+            // cin >> m;
+            // cout << "Enter N: ";
+            // cin >> n;
+            // cout << "Enter K: ";
+            // cin >> k;
+
+            vector<int>
+                group = vector<int>(m);
+            std::iota(std::begin(group), std::end(group), 1); // Fill with 1, ..., 99.
+
+            fileForOutput << "CLASS: ";
+            for (std::vector<int>::const_iterator i = group.begin(); i != group.end(); ++i)
+                fileForOutput << *i << ' ';
+
+            fileForOutput << endl;
+            startStudent = GetStudent(n, group.size());
+            while (group.size() != 1)
+            {
+                cout << "[size OF CLASS] : " << group.size() << endl;
+
+                // cout << GetBoss(GetStudent(n, group.size()), k, group.size()) << endl;
+
+                cout << "StartST: " << startStudent << endl;
+                cout << "GetBoss student: " << GetBoss(startStudent, k, group.size()) << endl;
+                temporaryStudent = GetBoss(startStudent, k, group.size());
+
+                group.erase(group.begin() + (GetBoss(startStudent, k, group.size()) - 1));
+
+                startStudent = temporaryStudent; //or +1
+
+                if (startStudent > group.size())
+                {
+                    startStudent = 1;
+                }
+
+                fileForOutput << "CLASS: ";
+                for (std::vector<int>::const_iterator i = group.begin(); i != group.end(); ++i)
+                    fileForOutput << *i << ' ';
+                fileForOutput << endl;
+            }
+            fileForOutput << "Староста: " << group[0] << std::endl;
+            //std::cout << group[1] << std::endl;
+        }
+    }
     return 0;
 }

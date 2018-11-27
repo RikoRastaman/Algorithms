@@ -1,6 +1,0 @@
-﻿CLASS: 1 2 3 4 5 
-CLASS: 1 2 3 5 
-CLASS: 2 3 5 
-CLASS: 2 5 
-CLASS: 5 
-Староста: 5

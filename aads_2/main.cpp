@@ -5,35 +5,35 @@
 #include <string>
 #include <Windows.h>
 /*
-8. Р’С‹Р±РѕСЂС‹ СЃС‚Р°СЂРѕСЃС‚С‹ РІ РіСЂСѓРїРїРµ СЃС‚СѓРґРµРЅС‚РѕРІ РёР· M С‡РµР»РѕРІРµРє
-РѕСЂРіР°РЅРёР·РѕРІР°РЅС‹ РїРѕ СЃР»РµРґСѓСЋС‰РёРј РїСЂР°РІРёР»Р°Рј. Р—Р°РґР°СЋС‚СЃСЏ С†РµР»С‹Рµ С‡РёСЃР»Р° N Рё
-K. РЎС‚СѓРґРµРЅС‚С‹ СЃС‚Р°РЅРѕРІСЏС‚СЃСЏ РїРѕ РєСЂСѓРіСѓ РІ СЃРѕРѕС‚РІРµС‚СЃС‚РІРёРё СЃРѕ СЃРІРѕРёРјРё
-РЅРѕРјРµСЂР°РјРё РІ Р¶СѓСЂРЅР°Р»Рµ. РќР°С‡РёРЅР°СЏ РѕС‚ N-РіРѕ СЃС‚СѓРґРµРЅС‚Р° РѕС‚СЃС‡РёС‚С‹РІР°РµС‚СЃСЏ K-Р№
-СЃС‚СѓРґРµРЅС‚. РЎС‡РµС‚ РІРµРґРµС‚СЃСЏ С†РёРєР»РёС‡РµСЃРєРё РїРѕ РІРѕР·СЂР°СЃС‚Р°РЅРёСЋ РЅРѕРјРµСЂРѕРІ. Р­С‚РѕС‚
-СЃС‚СѓРґРµРЅС‚ РІС‹Р±С‹РІР°РµС‚ РёР· РїСЂРµС‚РµРЅРґРµРЅС‚РѕРІ. РќР°С‡РёРЅР°СЏ СЃРѕ СЃР»РµРґСѓСЋС‰РµРіРѕ
-СЃС‚СѓРґРµРЅС‚Р°, РїСЂРѕС†РµРґСѓСЂР° РїРѕРІС‚РѕСЂСЏРµС‚СЃСЏ. РџРѕСЃР»РµРґРЅРёР№ РѕСЃС‚Р°РІС€РёР№СЃСЏ СЃС‚СѓРґРµРЅС‚
-СЃС‚Р°РЅРѕРІРёС‚СЃСЏ СЃС‚Р°СЂРѕСЃС‚РѕР№. Р’РІРµСЃС‚Рё Р·РЅР°С‡РµРЅРёСЏ M, N, K Рё РЅР°Р№С‚Рё РЅРѕРјРµСЂ
-СЃС‚Р°СЂРѕСЃС‚С‹ (7).
+8. Выборы старосты в группе студентов из M человек
+организованы по следующим правилам. Задаются целые числа N и
+K. Студенты становятся по кругу в соответствии со своими
+номерами в журнале. Начиная от N-го студента отсчитывается K-й
+студент. Счет ведется циклически по возрастанию номеров. Этот
+студент выбывает из претендентов. Начиная со следующего
+студента, процедура повторяется. Последний оставшийся студент
+становится старостой. Ввести значения M, N, K и найти номер
+старосты (7).
 */
 
 using namespace std;
 
 int GetStudent(int n, int groupSize)
 {
-    // cout << "Group size in student" << groupSize << endl;
-    if (groupSize > n) ///or -1
+
+    if (groupSize > n)
     {
-        return n; // n-1 or n
+        return n;
     }
     int coef = (groupSize) / n;
-    // cout << "coef=>" << coef << endl;
+
     if (coef >= 1)
     {
-        return n; // or * coef
+        return n;
     }
     else
     {
-        // cout << n % groupSize << "%%" << endl;
+
         if ((n % groupSize) == 0)
         {
             return groupSize;
@@ -45,32 +45,28 @@ int GetStudent(int n, int groupSize)
                 n = n - groupSize;
             }
             return n;
-            // return n - groupSize;
         }
     }
 }
 
 int GetBoss(int n, int k, int groupSize)
 {
-    // cout << "N in getboss=" << n << endl;
-    // k;
-    // groupSize;
     if (n + k - 1 > groupSize)
     {
-        // int coef = ((n + k) / groupSize);
         int bossPosition = (n + k - 1);
+        if ((bossPosition % groupSize) == 0)
+        {
+            return groupSize;
+        }
         while (!(bossPosition < groupSize))
         {
             bossPosition = bossPosition - groupSize;
         }
-
-        // int bossPosition = (n + k - 1) - groupSize * coef;
         return bossPosition;
     }
     else
     {
-        // cout << n - 1 + k << endl;
-        return n - 1 + k; // n-1 or n
+        return n - 1 + k;
     }
 }
 
@@ -99,7 +95,11 @@ int main()
     {
         while (fileForInput >> m >> n >> k)
         {
-
+            if (m == 0 || n == 0 || k == 0)
+            {
+                fileForOutput << "ERROR: Input zero";
+                break;
+            }
             // cout << "Enter M: ";
             // cin >> m;
             // cout << "Enter N: ";
@@ -119,21 +119,17 @@ int main()
             startStudent = GetStudent(n, group.size());
             while (group.size() != 1)
             {
-                cout << "[size OF CLASS] : " << group.size() << endl;
-
-                // cout << GetBoss(GetStudent(n, group.size()), k, group.size()) << endl;
-
-                cout << "StartST: " << startStudent << endl;
-                cout << "GetBoss student: " << GetBoss(startStudent, k, group.size()) << endl;
+                // fileForOutput << "StartST: " << startStudent << endl;
+                // fileForOutput << "GetBoss student: " << GetBoss(startStudent, k, group.size()) << endl;
                 temporaryStudent = GetBoss(startStudent, k, group.size());
 
                 group.erase(group.begin() + (GetBoss(startStudent, k, group.size()) - 1));
 
-                startStudent = temporaryStudent; //or +1
+                startStudent = temporaryStudent;
 
                 if (startStudent > group.size())
                 {
-                    startStudent = 1;
+                    startStudent = startStudent - group.size();
                 }
 
                 fileForOutput << "CLASS: ";
@@ -141,8 +137,7 @@ int main()
                     fileForOutput << *i << ' ';
                 fileForOutput << endl;
             }
-            fileForOutput << "РЎС‚Р°СЂРѕСЃС‚Р°: " << group[1] << std::endl;
-            //std::cout << group[1] << std::endl;
+            fileForOutput << "Староста: " << group[0] << std::endl;
         }
     }
     return 0;
