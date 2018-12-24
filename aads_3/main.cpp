@@ -24,18 +24,57 @@ struct Node
     }
 };
 
+void createNode(Node *node, std::ifstream &fin, std::string &str)
+{
+    int treeLevel = 0;
+    while (str[treeLevel] == ' ')
+    {
+        treeLevel++;
+    }
+    cout << treeLevel << endl;
+    // node->AddNode()
+    while (!fin.eof())
+    {
+
+        cout << treeLevel;
+
+        getline(fin, str);
+
+        // createNode(rootNode, treeLevel);
+    }
+}
+
 Node *InitTree()
 {
-    auto rootNode = new Node("A");
+    ifstream fin("Test.txt");
+    string str;
+    getline(fin, str);
+    // cout << str << endl;
+
+    auto rootNode = new Node(str);
+
+    createNode(rootNode, fin, str);
+
+    // auto rootNode = new Node(str);
+    // auto previousNode = rootNode;
+    // while (str[treeLevel] == ' ')
+    // {
+    //     treeLevel++;
+    // }
+
+    // while (!fin.eof())
+    // {
+    // }
+
     auto nodeB = new Node("B");
-    auto nodeC = new Node("C");
-    auto nodeD = new Node("D");
-    auto nodeE = new Node("E");
+    // auto nodeD = new Node("D");
+    // auto nodeE = new Node("E");
 
     rootNode->AddNode(nodeB);
-    nodeB->AddNode(nodeC);
-    nodeB->AddNode(nodeD);
+    // nodeB->AddNode(nodeC);
+    // nodeB->AddNode(nodeD);
 
+    // return rootNode;
     return rootNode;
 }
 
@@ -100,18 +139,18 @@ Node *FindCommonFather(Node *node, string value)
 
 int main()
 {
-    ifstream fin("Test.txt");
-    string str;
-    getline(fin, str);
+    // ifstream fin("Test.txt");
+    // string str;
+    // getline(fin, str);
     auto rootNode = InitTree();
 
-    auto nodeA = rootNode;
+    // auto nodeA = rootNode;
     auto nodeB = FindNode(rootNode, "B");
-    auto nodeC = FindNode(rootNode, "C");
-    auto nodeD = FindNode(rootNode, "D");
+    // auto nodeC = FindNode(rootNode, "C");
+    // auto nodeD = FindNode(rootNode, "D");
 
     auto firstNode = nodeB;
-    auto secondNode = nodeD;
+    auto secondNode = rootNode;
 
     if (FindNode(firstNode, secondNode->value))
     {
@@ -127,8 +166,8 @@ int main()
     auto commonFather = FindCommonFather(firstNode, "D");
     cout << commonFather->value << " is common father of " << firstNode->value << " and " << secondNode->value;
 
-    // cout << endl;
-    // PrintNode(nodeA);
+    cout << endl;
+    PrintNode(rootNode);
 
     return 0;
 }
