@@ -31,16 +31,27 @@ void createNode(Node *node, std::ifstream &fin, std::string &str)
     {
         treeLevel++;
     }
-    cout << treeLevel << endl;
-    // node->AddNode()
+
     while (!fin.eof())
     {
-
-        cout << treeLevel;
-
         getline(fin, str);
+        string name;
+        int spaces = 0;
+        while (spaces < str.length() && str[spaces] == ' ')
+        {
+            spaces++;
+        }
+        // cout << spaces << endl;
+        name = str.substr(spaces);
+        auto nodeSon = new Node(name);
+        node->AddNode(nodeSon);
+        cout << (spaces > treeLevel) << endl;
+        if (spaces >= treeLevel)
+        {
 
-        // createNode(rootNode, treeLevel);
+            createNode(nodeSon, fin, str);
+            spaces = 0;
+        }
     }
 }
 
@@ -66,11 +77,9 @@ Node *InitTree()
     // {
     // }
 
-    auto nodeB = new Node("B");
     // auto nodeD = new Node("D");
     // auto nodeE = new Node("E");
 
-    rootNode->AddNode(nodeB);
     // nodeB->AddNode(nodeC);
     // nodeB->AddNode(nodeD);
 
@@ -145,12 +154,12 @@ int main()
     auto rootNode = InitTree();
 
     // auto nodeA = rootNode;
-    auto nodeB = FindNode(rootNode, "B");
-    // auto nodeC = FindNode(rootNode, "C");
-    // auto nodeD = FindNode(rootNode, "D");
+    // auto root = FindNode(rootNode, "Artem");
+    auto nodeC = FindNode(rootNode, "Artem");
+    auto nodeD = FindNode(rootNode, "Diana");
 
-    auto firstNode = nodeB;
-    auto secondNode = rootNode;
+    auto firstNode = nodeD;
+    auto secondNode = nodeC;
 
     if (FindNode(firstNode, secondNode->value))
     {
