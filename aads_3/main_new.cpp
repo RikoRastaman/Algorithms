@@ -36,21 +36,19 @@ void PrintNode(Node *node)
 
 void createNode(Node *node, std::ifstream &fin, std::string &str)
 {
-    cout << "FIRST STR IN FUNCTION:" << str << endl;
     int treeLevel = 0;
     while (str[treeLevel] == ' ')
     {
         treeLevel++;
     }
-    // cout << treeLevel << endl;
-    // getline(fin, str);
+    cout << treeLevel << endl;
+    getline(fin, str);
     string name;
     int spacesMain = 0;
     while (spacesMain < str.length() && str[spacesMain] == ' ')
     {
         spacesMain++;
     }
-    cout << spacesMain << " :SPACES MAIN" << endl;
     name = str.substr(spacesMain);
     auto nodeMainSon = new Node(name);
     // cout << name << endl;
@@ -59,78 +57,34 @@ void createNode(Node *node, std::ifstream &fin, std::string &str)
 
     while (!fin.eof())
     {
-        string secondstr;
-        getline(fin, secondstr);
-        cout << "SECOND STR IN FUNCTION:" << secondstr << endl;
+        getline(fin, str);
         string name;
         int spaces = 0;
-        while (spaces < secondstr.length() && secondstr[spaces] == ' ')
+        while (spaces < str.length() && str[spaces] == ' ')
         {
             spaces++;
         }
         cout << " spaces: " << spaces << endl;
-        name = secondstr.substr(spaces);
+        name = str.substr(spaces);
         auto nodeSon = new Node(name);
-        // cout << "name: " << name << endl;
+        cout << "name: " << name << endl;
 
-        if (spacesMain == spaces)
-        {
-            node->AddNode(nodeSon);
-        }
-        if (spacesMain < spaces)
-        {
-
-            createNode(nodeMainSon, fin, secondstr);
-            // nodeMainSon->AddNode(nodeSon);
-            // createNode(nodeSon, fin, str);
-        }
-
-        if (spacesMain > spaces)
+        if (spaces < spacesMain)
         {
             return;
         }
+        if (spaces > spacesMain)
+        {
+            // nodeMainSon->AddNode(nodeSon);
+            createNode(nodeSon, fin, str);
+        }
 
-        // nodeMainSon->AddNode(nodeSon);
+        if (spaces == spacesMain)
+        {
+            node->AddNode(nodeSon);
+        }
+        nodeMainSon->AddNode(nodeSon);
 
-        // if (spaces < treeLevel)
-        // {
-        //     return;
-        // }
-        // if (spaces == treeLevel)
-        // {
-        //     node->AddNode(nodeSon);
-        // }
-
-        // if (spaces > treeLevel)
-        // {
-        //     node->nodes.push_back(nodeSon);
-        //     nodeSon->father = node;
-        // }
-
-        // if (spaces == treeLevel)
-        // {
-
-        //     continue;
-        // }
-
-        // if (spaces >= treeLevel)
-        // {
-        //     node->AddNode(nodeSon);
-        //     if (spaces == treeLevel)
-        //     {
-        //         continue;
-        //     }
-        //     createNode(nodeSon, fin, str);
-        // }
-
-        // node->AddNode(nodeSon);
-        // cout << (spaces > treeLevel) << endl;
-        // if (spaces > treeLevel)
-        // {
-        //     cout << " im here:" << name << endl;
-        //
-        //     spaces = 0;
-        // }
     }
 }
 
@@ -142,7 +96,7 @@ Node *InitTree()
     // cout << str << endl;
 
     auto rootNode = new Node(str);
-    getline(fin, str);
+
     createNode(rootNode, fin, str);
 
     // auto rootNode = new Node(str);
@@ -230,16 +184,13 @@ int main()
     auto nodeC = FindNode(rootNode, "Christy");
     auto nodeD = FindNode(rootNode, "Diana");
     auto nodeB = FindNode(rootNode, "Bill");
-    auto nodeR = FindNode(rootNode, "Rikardo");
-    auto nodeQ = FindNode(rootNode, "Qwery");
+    auto nodeR = FindNode(rootNode, "Riko");
 
-    PrintNode(nodeD);
+    PrintNode(rootNode);
     cout << endl;
 
-    auto firstNode = nodeR;
-    auto secondNode = nodeQ;
-
-    string forCommon = "Rikardo";
+    auto firstNode = nodeD;
+    auto secondNode = nodeC;
 
     if (FindNode(firstNode, secondNode->value))
     {
@@ -250,7 +201,7 @@ int main()
         cout << secondNode->value << " father of " << firstNode->value;
     }
 
-    auto commonFather = FindCommonFather(firstNode, forCommon);
+    auto commonFather = FindCommonFather(firstNode, "Diana");
     cout << commonFather->value << " is common father of " << firstNode->value << " and " << secondNode->value;
 
     cout << endl;
