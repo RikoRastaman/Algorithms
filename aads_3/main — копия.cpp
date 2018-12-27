@@ -23,7 +23,6 @@ struct Node
         node->father = this;
     }
 };
-std::vector<Node *> parents;
 
 void PrintNode(Node *node)
 {
@@ -35,20 +34,14 @@ void PrintNode(Node *node)
     }
 }
 
-void createNode(Node *node, std::ifstream &fin, std::string &str, std::vector<Node *> parents)
+void createNode(Node *node, std::ifstream &fin, std::string &str)
 {
-
-    // parents.push_back(node);
-
     // cout << "FIRST STR IN FUNCTION:" << str << endl;
     int treeLevel = 0;
     while (str[treeLevel] == ' ')
     {
         treeLevel++;
     }
-    parents.reserve(10);
-    parents.emplace(parents.begin(), node);
-
     // cout << treeLevel << endl;
     // getline(fin, str);
     string name;
@@ -83,7 +76,7 @@ void createNode(Node *node, std::ifstream &fin, std::string &str, std::vector<No
         if (spacesMain < spaces)
         {
 
-            createNode(nodeMainSon, fin, secondstr, parents);
+            createNode(nodeMainSon, fin, secondstr);
             // cout << "GET BACK:";
             // PrintNode(node);
             // cout << endl;
@@ -102,12 +95,10 @@ void createNode(Node *node, std::ifstream &fin, std::string &str, std::vector<No
         // cout << "Node son: ";
         // PrintNode(nodeSon);
         // cout << spacesMain << " :SPACES MAIN" << endl;
-        // cout << "TRUE??" << (spacesMain > spaces) << endl;
+        cout << "TRUE??" << (spacesMain > spaces) << endl;
         if (spacesMain > spaces)
         {
-            (parents[0]->father)->AddNode(nodeSon);
-            // cout << "MAIN SPACES IN:" << spacesMain << endl;
-            // cout << "SPACES IN:" << spaces << endl;
+            str = secondstr;
         }
 
         if (spacesMain == spaces)
@@ -168,7 +159,7 @@ Node *InitTree()
 
     auto rootNode = new Node(str);
     getline(fin, str);
-    createNode(rootNode, fin, str, parents);
+    createNode(rootNode, fin, str);
 
     // auto rootNode = new Node(str);
     // auto previousNode = rootNode;
@@ -262,23 +253,23 @@ int main()
 
     PrintNode(rootNode);
     cout << endl;
-    //if first = root ryturn root
-    auto firstNode = rootNode;
-    auto secondNode = nodeB;
+
+    auto firstNode = nodeM;
+    auto secondNode = nodeDob;
 
     string forCommon = "Dobrogen";
 
     if (FindNode(firstNode, secondNode->value))
     {
-        cout << firstNode->value << " father of " << secondNode->value << endl;
+        cout << firstNode->value << " father of " << secondNode->value;
     }
     if (FindNode(secondNode, firstNode->value))
     {
-        cout << secondNode->value << " father of " << firstNode->value << endl;
+        cout << secondNode->value << " father of " << firstNode->value;
     }
 
     auto commonFather = FindCommonFather(firstNode, forCommon);
-    cout << commonFather->value << " is common father of " << firstNode->value << " and " << secondNode->value << endl;
+    cout << commonFather->value << " is common father of " << firstNode->value << " and " << secondNode->value;
 
     cout << endl;
 

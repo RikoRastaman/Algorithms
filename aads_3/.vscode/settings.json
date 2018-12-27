@@ -8,6 +8,8 @@
         "xstring": "cpp",
         "initializer_list": "cpp",
         "type_traits": "cpp",
-        "vector": "cpp"
+        "vector": "cpp",
+        "system_error": "cpp",
+        "xtr1common": "cpp"
     }
 }
