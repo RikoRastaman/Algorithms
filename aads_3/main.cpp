@@ -1,3 +1,4 @@
+
 #include <iostream>
 #include <vector>
 #include <memory>
@@ -8,284 +9,226 @@ using namespace std;
 
 struct Node
 {
-    std::vector<Node *> childs;
-    Node *father;
-    string value;
+	std::vector<Node *> childs;
+	Node *father;
+	string value;
 
-    Node(string value)
-    {
-        this->value = value;
-    }
+	Node(const string &value)
+	{
+		this->value = value;
+	}
 
-    void AddNode(Node *node)
-    {
-        this->childs.push_back(node);
-        node->father = this;
-    }
+	void AddNode(Node *node)
+	{
+		this->childs.push_back(node);
+		node->father = this;
+	}
 };
-// class parents{
-//     std::vector<Node *> parents;
-//     int deep;
-// }
-std::vector<Node *> parents;
 
 void PrintNode(Node *node)
 {
-    cout << node->value << ' ';
-    ;
-    for (auto child : node->childs)
-    {
-        PrintNode(child);
-    }
+	cout << node->value << ' ';
+	;
+	for (auto child : node->childs)
+	{
+		PrintNode(child);
+	}
 }
 
-void createNode(Node *node, std::ifstream &fin, std::string &str, std::vector<Node *> parents)
+std::string readTree(std::ifstream &file, Node *currentNode, std::string firstStr)
 {
-
-    // parents.push_back(node);
-
-    // cout << "FIRST STR IN FUNCTION:" << str << endl;
-    int treeLevel = 0;
-    while (str[treeLevel] == ' ')
-    {
-        treeLevel++;
-    }
-    parents.reserve(10);
-    parents.emplace(parents.begin(), node);
-
-    // cout << treeLevel << endl;
-    // getline(fin, str);
-    string name;
-    int spacesMain = 0;
-    while (spacesMain < str.length() && str[spacesMain] == ' ')
-    {
-        spacesMain++;
-    }
-
-    name = str.substr(spacesMain);
-    auto nodeMainSon = new Node(name);
-    // cout << name << endl;
-
-    node->AddNode(nodeMainSon);
-
-    while (!fin.eof())
-    {
-        string secondstr;
-        getline(fin, secondstr);
-        // cout << "SECOND STR IN FUNCTION:" << secondstr << endl;
-        string name;
-        int spaces = 0;
-        while (spaces < secondstr.length() && secondstr[spaces] == ' ')
-        {
-            spaces++;
-        }
-        // cout << " spaces: " << spaces << endl;
-        name = secondstr.substr(spaces);
-        auto nodeSon = new Node(name);
-        // cout << "name: " << name << endl;
-
-        if (spacesMain < spaces)
-        {
-
-            createNode(nodeMainSon, fin, secondstr, parents);
-            // cout << "GET BACK:";
-            // PrintNode(node);
-            // cout << endl;
-            // cout << "SPACES MAIN BACK:" << spacesMain << endl;
-
-            spaces = 0;
-            while (spaces < secondstr.length() && secondstr[spaces] == ' ')
-            {
-                spaces++;
-            }
-
-            // continue;
-            // createNode(nodeSon, fin, str);
-        }
-
-        // cout << "Node son: ";
-        // PrintNode(nodeSon);
-        // cout << spacesMain << " :SPACES MAIN" << endl;
-        // cout << "TRUE??" << (spacesMain > spaces) << endl;
-        if (spacesMain > spaces)
-        {
-            node = (parents[0]->father);
-            node->AddNode(nodeSon);
-            //(parents[0]->father)->AddNode(nodeSon);
-            //spacesMain = spaces;// DOUB!!!!!!!!!!!!!!!!!!!
-        }
-
-        if (spacesMain == spaces)
-        {
-            node->AddNode(nodeSon);
-        }
-
-        // node->AddNode(nodeSon);
-
-        // if (spaces < treeLevel)
-        // {
-        //     return;
-        // }
-        // if (spaces == treeLevel)
-        // {
-        //     node->AddNode(nodeSon);
-        // }
-
-        // if (spaces > treeLevel)
-        // {
-        //     node->nodes.push_back(nodeSon);
-        //     nodeSon->father = node;
-        // }
-
-        // if (spaces == treeLevel)
-        // {
-
-        //     continue;
-        // }
-
-        // if (spaces >= treeLevel)
-        // {
-        //     node->AddNode(nodeSon);
-        //     if (spaces == treeLevel)
-        //     {
-        //         continue;
-        //     }
-        //     createNode(nodeSon, fin, str);
-        // }
-
-        // node->AddNode(nodeSon);
-        // cout << (spaces > treeLevel) << endl;
-        // if (spaces > treeLevel)
-        // {
-        //     cout << " im here:" << name << endl;
-        //
-        //     spaces = 0;
-        // }
-    }
+	int treeLevel = 0;
+	while (firstStr[treeLevel] == ' ')
+	{
+		treeLevel++;
+	}
+	string name = firstStr.substr(treeLevel);
+	currentNode->AddNode(new Node(name));
+	while (!(file.eof()))
+	{
+		std::string str;
+		std::getline(file, str);
+		int currentSpace = 0;
+		while (currentSpace < str.length() && str[currentSpace] == ' ')
+		{
+			currentSpace++;
+		}
+		if (currentSpace > treeLevel)
+		{
+			str = readTree(file, (currentNode->childs[currentNode->childs.size() - 1]), str);
+			currentSpace = 0;
+			while (currentSpace < str.length() && str[currentSpace] == ' ')
+			{
+				currentSpace++;
+			}
+		}
+		if (currentSpace < treeLevel)
+		{
+			return str;
+		}
+		if (currentSpace == treeLevel)
+		{
+			currentNode->AddNode(new Node(str.substr(currentSpace)));
+		}
+	}
+	return "";
 }
 
 Node *InitTree()
 {
-    ifstream fin("Test.txt");
-    string str;
-    getline(fin, str);
-    // cout << str << endl;
+	string fileName = "";
 
-    auto rootNode = new Node(str);
-    getline(fin, str);
-    createNode(rootNode, fin, str, parents);
+	cout << "Enter file name: " << endl;
+	cin >> fileName;
 
-    // auto rootNode = new Node(str);
-    // auto previousNode = rootNode;
-    // while (str[treeLevel] == ' ')
-    // {
-    //     treeLevel++;
-    // }
+	ifstream fin(fileName);
 
-    // while (!fin.eof())
-    // {
-    // }
+	if (!fin.is_open())
+	{
+		cout << "File does not opened" << endl;
+		return nullptr;
+	}
+	string str;
+	getline(fin, str);
 
-    // auto nodeD = new Node("D");
-    // auto nodeE = new Node("E");
+	auto rootNode = new Node(str);
+	rootNode->father = nullptr;
+	getline(fin, str);
 
-    // nodeB->AddNode(nodeC);
-    // nodeB->AddNode(nodeD);
+	readTree(fin, rootNode, str);
 
-    // return rootNode;
-
-    return rootNode;
+	return rootNode;
 }
 
 Node *FindNode(Node *node, string value)
 {
-    if (node->childs.size() == 0)
-    {
-        // cout << "Im here" << node->childs.size() << endl;
-        return nullptr;
-    }
+	// if (node->value == value)
+	// {
+	// 	return node;
+	// }
+	if (node->childs.size() == 0)
+	{
+		return nullptr;
+	}
 
-    for (auto child : node->childs)
-    {
-        if (child->value == value)
-        {
-            return child;
-        }
-        auto recursiveNode = FindNode(child, value);
-        if (!recursiveNode)
-        {
-            continue;
-        }
-        if (recursiveNode->value == value)
-        {
-            return recursiveNode;
-        }
-    }
+	for (auto child : node->childs)
+	{
+		if (child->value == value)
+		{
+			return child;
+		}
+		auto recursiveNode = FindNode(child, value);
+		if (!recursiveNode)
+		{
+			continue;
+		}
+		if (recursiveNode->value == value)
+		{
+			return recursiveNode;
+		}
+	}
 
-    return nullptr;
+	return nullptr;
 }
 
 Node *FindCommonFather(Node *node, string value)
 {
-    auto currentNode = node;
-    do
-    {
-        currentNode = currentNode->father;
-        if (currentNode == nullptr)
-        {
-            return nullptr;
-        }
-        auto foundNode = FindNode(currentNode, value);
+	auto currentNode = node;
+	do
+	{
+		currentNode = currentNode->father;
+		if (currentNode == nullptr)
+		{
+			return nullptr;
+		}
+		auto foundNode = FindNode(currentNode, value);
 
-        if (foundNode)
-        {
-            return currentNode;
-        }
+		if (foundNode)
+		{
+			return currentNode;
+		}
 
-    } while (true);
+	} while (true);
 
-    return currentNode;
+	return currentNode;
+}
+
+Node *GetNameFromInput(Node *root)
+{
+
+	string str;
+	Node *result = nullptr;
+	while (result == nullptr)
+	{
+		cout << "Enter name" << endl;
+		cin >> str;
+
+		if (root->value == str)
+		{
+			return root;
+		}
+
+		result = FindNode(root, str);
+		if (result == nullptr)
+		{
+			cout << "There is no Node with name: " << str << endl;
+			cout << "Please write correct name." << endl;
+		}
+	}
+
+	return result;
 }
 
 int main()
 {
-    // ifstream fin("Test.txt");
-    // string str;
-    // getline(fin, str);
-    auto rootNode = InitTree();
-    //
-    // cout << endl;
-    // auto nodeA = rootNode;
-    // auto root = FindNode(rootNode, "Artem");
-    auto nodeC = FindNode(rootNode, "Christy");
-    auto nodeD = FindNode(rootNode, "Diana");
-    auto nodeB = FindNode(rootNode, "Bill");
-    auto nodeR = FindNode(rootNode, "Rikardo");
-    auto nodeQ = FindNode(rootNode, "Qwery");
-    auto nodeM = FindNode(rootNode, "Milosh");
-    auto nodeDob = FindNode(rootNode, "Dobrogen");
+	auto rootNode = InitTree();
+	string command = "";
 
-    PrintNode(rootNode);
-    cout << endl;
-    //if first = root ryturn root
-    auto firstNode = nodeM;
-    auto secondNode = nodeDob;
+	while (command != "no")
+	{
+		Node *firstNode = nullptr;
+		Node *secondNode = nullptr;
+		string str = "";
+		string str2 = "";
 
-    string forCommon = "Dobrogen";
+		// cin >> str;
+		// firstNode = FindNode(rootNode, str);
+		// cin >> str2;
+		// secondNode = FindNode(rootNode, str2);
 
-    if (FindNode(firstNode, secondNode->value))
-    {
-        cout << firstNode->value << " father of " << secondNode->value << endl;
-    }
-    if (FindNode(secondNode, firstNode->value))
-    {
-        cout << secondNode->value << " father of " << firstNode->value << endl;
-    }
+		do
+		{
+			firstNode = GetNameFromInput(rootNode);
+			secondNode = GetNameFromInput(rootNode);
+			if (firstNode->value == secondNode->value)
+			{
+				cout << "You`ve entered the same names. Please rewrite them." << endl;
+			}
+		} while (firstNode->value == secondNode->value);
 
-    auto commonFather = FindCommonFather(firstNode, forCommon);
-    cout << commonFather->value << " is common father of " << firstNode->value << " and " << secondNode->value << endl;
+		PrintNode(rootNode);
+		cout << endl;
 
-    cout << endl;
+		if (FindNode(firstNode, secondNode->value))
+		{
+			cout << firstNode->value << " father of " << secondNode->value << endl;
+		}
+		if (FindNode(secondNode, firstNode->value))
+		{
+			cout << secondNode->value << " father of " << firstNode->value << endl;
+		}
 
-    return 0;
+		auto commonFather = FindCommonFather(firstNode, secondNode->value);
+		if (commonFather != nullptr)
+		{
+			cout << commonFather->value << " is common father of " << secondNode->value << " and " << firstNode->value << endl;
+		}
+
+		cout << endl;
+
+		cout << "Continue? (Write 'no' to stop running / 'yes' to continue)" << endl;
+		cin >> command;
+	}
+
+	return 0;
 }
