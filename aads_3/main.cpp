@@ -23,6 +23,10 @@ struct Node
         node->father = this;
     }
 };
+// class parents{
+//     std::vector<Node *> parents;
+//     int deep;
+// }
 std::vector<Node *> parents;
 
 void PrintNode(Node *node)
@@ -89,11 +93,11 @@ void createNode(Node *node, std::ifstream &fin, std::string &str, std::vector<No
             // cout << endl;
             // cout << "SPACES MAIN BACK:" << spacesMain << endl;
 
-            // spaces = 0;
-            // while (spaces < secondstr.length() && secondstr[spaces] == ' ')
-            // {
-            //     spaces++;
-            // }
+            spaces = 0;
+            while (spaces < secondstr.length() && secondstr[spaces] == ' ')
+            {
+                spaces++;
+            }
 
             // continue;
             // createNode(nodeSon, fin, str);
@@ -105,9 +109,10 @@ void createNode(Node *node, std::ifstream &fin, std::string &str, std::vector<No
         // cout << "TRUE??" << (spacesMain > spaces) << endl;
         if (spacesMain > spaces)
         {
-            (parents[0]->father)->AddNode(nodeSon);
-            // cout << "MAIN SPACES IN:" << spacesMain << endl;
-            // cout << "SPACES IN:" << spaces << endl;
+            node = (parents[0]->father);
+            node->AddNode(nodeSon);
+            //(parents[0]->father)->AddNode(nodeSon);
+            //spacesMain = spaces;// DOUB!!!!!!!!!!!!!!!!!!!
         }
 
         if (spacesMain == spaces)
@@ -263,8 +268,8 @@ int main()
     PrintNode(rootNode);
     cout << endl;
     //if first = root ryturn root
-    auto firstNode = rootNode;
-    auto secondNode = nodeB;
+    auto firstNode = nodeM;
+    auto secondNode = nodeDob;
 
     string forCommon = "Dobrogen";
 
