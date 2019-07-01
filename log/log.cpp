@@ -2,7 +2,26 @@
 #include <limits>
 #include <fstream>
 #include <ostream>
+#include <array>
+/*
+		3.5. Распил бруса (7)
+	На пилораму привезли брус длиной L метров. Известны места, в которых необходимо сделать
+	распилы. Стоимость одного распила равна длине распиливаемого бруса. Различный порядок
+	распилов приводит к различным итоговым ценам. Например, брус длиной 10 метров, который
+	нужно распилить на расстоянии 2, 4 и 7 метров можно пилить разными способами. Можно
+	распилить сначала на отметке 2, потом 4 и потом 7. Стоимость будет 10+8+6=24. А если сначала
+	распилить на отметке 4, потом 2 и затем 7, то стоимость составит 10+4+6=20. Требуется написать
+	программу, которая определяла бы минимальную стоимость распила.
+	Ввод из файла INPUT.TXT. В первой строке содержатся через пробел натуральные числа
+	L и N (1 ≤ L ≤ 500, N &lt; L) – длина бруса и число разрезов. Вторая строка содержит N натуральных
+	чисел C i (0&lt;C i &lt;L) через пробел, задающих в строго возрастающем порядке места, в которых
+	нужно сделать распилы.
+	Вывод в файл OUTPUT.TXT.. В единственной строке вывести минимальную стоимость
+	распилов.
 
+	Семеев Максим ПС-21
+	Visual Studio 2017
+*/
 int main()
 {
 	std::ifstream inputFile;
@@ -14,9 +33,8 @@ int main()
 		std::cout << "Can not open file." << std::endl;
 		return 1;
 	}
-		const int MAX_LENGTH_LOG = 502;
-		int costCutSegment[MAX_LENGTH_LOG][MAX_LENGTH_LOG];
-		int coordinatCut[MAX_LENGTH_LOG];
+		std::array< std::array <int, 502>, 502> costCutSegment;
+		std::array<int, 502 > coordinatCut;
 
 		int numberCut;
 		int lenLog;
@@ -39,7 +57,7 @@ int main()
 		{
 			for (i = 0; i + m <= numberCut; i++)
 			{
-				int L = coordinatCut[i + m] - coordinatCut[i];
+				int cost = coordinatCut[i + m] - coordinatCut[i];
 				costCutSegment[i][i + m] = std::numeric_limits<int>::max();
 
 				for (int j = 1; j < m; j++)
@@ -50,7 +68,7 @@ int main()
 					}
 				}
 
-				costCutSegment[i][i + m] += L;
+				costCutSegment[i][i + m] += cost;
 			}
 		}
 
